@@ -60,6 +60,12 @@ class ProjectManager:
     CURRENT_PROJECTS = {}
 
     @classmethod
+    def init(cls):
+        if not os.path.isfile(cls.SAVE_PATH):
+            with open(cls.SAVE_PATH, 'a') as f:
+                f.write('all_projects: []\n')
+
+    @classmethod
     def get_project_details(cls, name: str) -> Union[Box, Dict]:
         existing = Box.from_yaml(filename=cls.SAVE_PATH)
         return existing[name]
@@ -71,10 +77,6 @@ class ProjectManager:
 
     @classmethod
     def create_project(cls, name: str, connection_name: str, path: str):
-        if not os.path.isfile(cls.SAVE_PATH):
-            with open(cls.SAVE_PATH, 'a') as f:
-                f.write('all_projects: []\n')
-
         existing = Box.from_yaml(filename=cls.SAVE_PATH)
         if name in existing:
             raise NameError(

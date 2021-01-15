@@ -1,6 +1,9 @@
 fastapi
 pydantic
 uvicorn
+pyyaml
 python-box
 boto3
 google-cloud-storage
+azure-core
+azure-storage-blob

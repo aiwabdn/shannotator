@@ -17,6 +17,8 @@ if not os.path.isdir('../storage'):
     os.makedirs('../storage')
 
 app = FastAPI()
+ConnectionManager.init()
+ProjectManager.init()
 
 origins = [
     "http://localhost",

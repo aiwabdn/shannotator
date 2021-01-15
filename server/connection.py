@@ -133,6 +133,12 @@ class ConnectionManager:
     CURRENT_CONNECTIONS = {}
 
     @classmethod
+    def init(cls):
+        if not os.path.isfile(cls.SAVE_PATH):
+            with open(cls.SAVE_PATH, 'a') as f:
+                f.write("all_connections: []\n")
+
+    @classmethod
     def get_supported_storages(cls) -> List[str]:
         return [_.STORAGE_TYPE for _ in cls.REGISTERED_STORAGES]
 
@@ -155,10 +161,6 @@ class ConnectionManager:
     @classmethod
     def create_connection(cls, name: str, storage_type: str,
                           params: Union[Box, Dict]):
-        if not os.path.isfile(cls.SAVE_PATH):
-            with open(cls.SAVE_PATH, 'a') as f:
-                f.write("all_connections: []\n")
-
         existing = Box.from_yaml(filename=cls.SAVE_PATH)
         if name in existing:
             raise NameError(
