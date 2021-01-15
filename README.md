@@ -1,0 +1,2 @@
+# shannotator
+self hosted annotator
