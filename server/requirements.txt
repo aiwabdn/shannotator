@@ -1,0 +1,6 @@
+fastapi
+pydantic
+uvicorn
+python-box
+boto3
+google-cloud-storage
