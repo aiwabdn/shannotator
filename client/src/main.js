@@ -1,11 +1,16 @@
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
-import { createApp } from "vue";
+import vuetify from '@/plugins/vuetify';
+import Vue from "vue";
+import Vuelidate from "vuelidate";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-createApp(App)
-  .use(store)
-  .use(router)
-  .mount("#app");
+Vue.config.productionTip = false;
+
+new Vue({
+  router,
+  store,
+  vuetify,
+  Vuelidate,
+  render: h => h(App)
+}).$mount("#app");

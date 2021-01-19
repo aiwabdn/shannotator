@@ -6,12 +6,49 @@ const ALLOWED_ZOOM_LEVELS = [1, 1.5, 2, 2.5, 3, 3.5, 4];
 const SERVER_PORT = 8000;
 const SERVER_ADDR = `${window.location.protocol}//${window.location.hostname}:${SERVER_PORT}`;
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function downloadURI(uri, name) {
   const link = document.createElement("a");
   link.download = name;
   link.href = uri;
   link.click();
 }
+
+async function saveAnnotations() {
+  if (store.state.currentFileIndex > -1) {
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify({
+        project: store.state.projectName,
+        path: store.getters.getCurrentFileName,
+        annotations: store.state.currentAnnotations,
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    };
+    await fetch(`${SERVER_ADDR}/save_annotation`, requestOptions);
+  }
+}
+
+async function downloadProject(fileFormat) {
+  const requestOptions = {
+    method: "POST",
+    body: JSON.stringify({
+      project: store.state.projectName,
+      format: fileFormat
+    }),
+    headers: { "Content-type": "application/json; charset=UTF-8" }
+  };
+  await fetch(`${SERVER_ADDR}/download_project`, requestOptions)
+    .then(response => response.blob())
+    .then(data => {
+      const dataURL = URL.createObjectURL(data);
+      downloadURI(dataURL, `${store.state.projectName}.${fileFormat}`);
+    });
+}
+
 
 class CanvasManager {
   static canvas = null;
@@ -104,6 +141,32 @@ class CanvasManager {
     CanvasManager.wrapper = canvasElement.parentElement;
   }
 
+  static async loadImage() {
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify({
+        project: store.state.projectName,
+        path: store.getters.getCurrentFileName,
+      }),
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    };
+    await fetch(`${SERVER_ADDR}/file_request`, requestOptions)
+      .then((response) => response.blob())
+      .then((image) => {
+        const imgUrl = URL.createObjectURL(image);
+        CanvasManager.refreshCanvas(imgUrl);
+        store.state.currentFileObject = imgUrl;
+      });
+    await fetch(`${SERVER_ADDR}/annotation_request`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        store.commit("setCurrentAnnotations", data);
+        sleep(100).then(() => {
+          CanvasManager.drawRegions();
+        });
+      });
+  }
+
   static refreshCanvas(imageUrl) {
     document.documentElement.scrollTop = 0;
     CanvasManager.ZOOM_LEVEL_INDEX = 0;
@@ -113,7 +176,8 @@ class CanvasManager {
       CanvasManager.canvas.width,
       CanvasManager.canvas.height
     );
-    if (imageUrl === undefined) {
+    // TODO: this looks very dubious
+    if (imageUrl === undefined && store.state.currentFileIndex === -1) {
       CanvasManager.canvasCtx.font = "30px Helvetica";
       CanvasManager.canvasCtx.fillText("Select a file to view", 10, 50);
     } else {
@@ -352,4 +416,4 @@ class CanvasManager {
 }
 
 // eslint-disable-next-line
-export { CanvasManager, downloadURI, SERVER_ADDR };
+export { CanvasManager, sleep, downloadProject, saveAnnotations, SERVER_ADDR };

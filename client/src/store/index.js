@@ -1,6 +1,10 @@
 import _ from "lodash";
-import { createStore } from "vuex";
+import Vue from "vue";
+import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+
+
+Vue.use(Vuex);
 
 const defaultAnnotations = {
   file_attributes: {},
@@ -13,6 +17,7 @@ const defaultState = {
   projectSettings: {},
   connectionName: "",
   currentFileIndex: -1,
+  currentFileObject: "",
   currentSelectionIndex: -1,
   currentAnnotations: _.cloneDeep(defaultAnnotations),
   coloringAttribute: null,
@@ -42,7 +47,7 @@ const COLORS = [
   "#F4A460"
 ];
 
-export default createStore({
+export default new Vuex.Store({
   state: _.cloneDeep(defaultState),
 
   getters: {

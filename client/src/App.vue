@@ -1,21 +1,39 @@
 <template>
-  <div>
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-    <!-- <div id="nav">
+  <!-- <div id="app">
+    <bar />
+    <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/project">Project</router-link>
-    </div> -->
+      <router-link to="/about">About</router-link>
+    </div>
     <router-view />
-  </div>
+  </div> -->
+  <v-app id="app">
+    <bar />
+    <v-main>
+      <v-container fluid fill-height style="border: solid black 2px">
+        <router-view />
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+import Bar from "@/components/Bar.vue";
+
+export default {
+  components: {
+    Bar,
+  },
+};
+</script>
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
+  font-family: Roboto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  /* color: #ccf7e2; */
 }
 
 #nav {

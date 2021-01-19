@@ -1,17 +1,15 @@
 <template>
-  <div class="container">
-    <h5 class="display-5">
+  <v-container>
+    <h2 class="ma-3">
       Default Attributes
-      <input
-        type="button"
-        class="btn btn-outline-secondary btn-sm pull-right"
-        :value="editing ? 'Save' : 'Edit'"
-        @click="editing = !editing"
-      />
-    </h5>
-    <update-attribute id="modifyattributemodal" />
-
-    <div id="default" v-for="(key, idx) in $store.getters.getAttributeNames()" v-bind:key="idx">
+      <v-btn icon right x-small type="button" @click="editing = !editing"
+        ><v-icon>mdi-pencil</v-icon>
+      </v-btn>
+    </h2>
+    <div
+      v-for="(key, idx) in $store.getters.getAttributeNames()"
+      v-bind:key="idx"
+    >
       <div v-if="isConditionMet(key) || editing">
         <attribute
           :id="`default-${key}`"
@@ -27,54 +25,24 @@
         {{ clearAttribute(key) }}
       </div>
     </div>
-    <hr />
-
-    <button
-      v-if="editing"
-      type="button"
-      class="btn btn-info btn-sm w-100"
-      data-toggle="modal"
-      data-target="#modifyattributemodal"
-    >
-      Add
-    </button>
-
-    <div class="form-group">
-      <label for="colour-attribute-selector">Region Colour</label>
-      <select
-        class="form-control"
-        id="colour-attribute-selector"
-        @change="coloringSelected($event)"
-      >
-        <option selected disabled>None</option>
-        <option
-          v-for="(name, idx) in $store.getters.getRadioAttributeNames()"
-          v-bind:key="idx"
-          :value="name"
-          >{{ name }}</option
-        >
-      </select>
-    </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import UpdateAttribute from "@/components/modals/UpdateAttribute.vue";
 import Attribute from "@/components/Attribute.vue";
 import _ from "lodash";
 import { CanvasManager } from "../utilities";
 
 export default {
-  name: "Settings",
+  name: "DefaultAttributes",
 
   components: {
-    UpdateAttribute,
-    Attribute
+    Attribute,
   },
 
   data() {
     return {
-      editing: false
+      editing: false,
     };
   },
 
@@ -120,8 +88,10 @@ export default {
     },
 
     clearAttribute(name) {
-      this.$store.state.currentDefaults[name] = this.$store.getters.getIndeterminateValue(name);
-    }
-  }
+      this.$store.state.currentDefaults[
+        name
+      ] = this.$store.getters.getIndeterminateValue(name);
+    },
+  },
 };
 </script>
