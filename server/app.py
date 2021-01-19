@@ -41,13 +41,14 @@ def get_supported_storages():
 
 
 @app.post('/create_connection')
-def create_connection(conn: Connection):
-    conn_params = {}
-    for param in conn.params:
-        conn_params[param.name] = param.value
+def create_connection(conn: Dict):
+    # conn_params = {}
+    # for param in conn.params:
+    #     conn_params[param.name] = param.value
+    conn = Box(conn)
     ConnectionManager.create_connection(name=conn.name,
                                         storage_type=conn.storage_type,
-                                        params=conn_params)
+                                        params=conn.params)
 
 
 @app.get('/saved_connection_names')

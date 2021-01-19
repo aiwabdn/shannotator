@@ -1,5 +1,6 @@
 fastapi
 pydantic
+aiofiles
 uvicorn
 pyyaml
 python-box

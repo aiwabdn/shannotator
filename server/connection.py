@@ -10,24 +10,23 @@ from storage_clients import AzureStorageClient
 
 
 class BaseConnection:
-    def __init__(self, name: str = '', params: Union[Box, Dict] = {}):
+    def __init__(self, name: str = "", params: Union[Box, Dict] = {}):
         self.name = name
         self.params = Box(params)
 
     def get_file(self, path: str) -> str:
         raise NotImplementedError
 
-    def get_filenames(self,
-                      extensions: Optional[List[str]] = [
-                          'png', 'jpg', 'jpeg', 'bmp'
-                      ]) -> List[str]:
+    def get_filenames(
+        self, extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"]
+    ) -> List[str]:
         raise NotImplementedError
 
 
 class LocalConnection(BaseConnection):
-    STORAGE_TYPE = 'Local'
+    STORAGE_TYPE = "Local"
 
-    def __init__(self, name: str = '', params: Union[Box, Dict] = {}):
+    def __init__(self, name: str = "", params: Union[Box, Dict] = {}):
         super().__init__(name, params)
 
     def get_file(self, path: str) -> str:
@@ -36,28 +35,27 @@ class LocalConnection(BaseConnection):
         return None
 
     def get_filenames(
-            self,
-            path: str,
-            extensions: Optional[List[str]] = ['png', 'jpg', 'jpeg',
-                                               'bmp']) -> List[str]:
+        self, path: str, extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"]
+    ) -> List[str]:
         extensions = extensions + [_.upper() for _ in extensions]
         filenames = []
         for extension in extensions:
-            foundfiles = glob(f'{path}/**/*.{extension}', recursive=True)
+            foundfiles = glob(f"{path}/**/*.{extension}", recursive=True)
             filenames.extend(foundfiles)
 
         return filenames
 
 
 class S3Connection(BaseConnection):
-    STORAGE_TYPE = 'S3'
+    STORAGE_TYPE = "S3"
 
-    def __init__(self, name: str = '', params: Union[Box, Dict] = {}):
+    def __init__(self, name: str = "", params: Union[Box, Dict] = {}):
         super().__init__(name, params)
         self.client = boto3.client(
-            's3',
+            "s3",
             aws_access_key_id=params.aws_access_key_id,
-            aws_secret_access_key=params.aws_secret_access_key)
+            aws_secret_access_key=params.aws_secret_access_key,
+        )
         self.bucket = params.bucket
         self.cache = {}
 
@@ -77,25 +75,24 @@ class S3Connection(BaseConnection):
         return tmpfile.name
 
     def get_filenames(
-            self,
-            path: str,
-            extensions: Optional[List[str]] = ['png', 'jpg', 'jpeg',
-                                               'bmp']) -> List[str]:
+        self, path: str, extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"]
+    ) -> List[str]:
         extensions = set(extensions + [_.upper() for _ in extensions])
         all_files = [
-            e['Key'] for p in self.client.get_paginator(
-                "list_objects_v2").paginate(Bucket=self.bucket, Prefix=path)
-            for e in p['Contents']
+            e["Key"]
+            for p in self.client.get_paginator("list_objects_v2").paginate(
+                Bucket=self.bucket, Prefix=path
+            )
+            for e in p["Contents"]
         ]
-        found_files = list(
-            filter(lambda l: l.split('.')[-1] in extensions, all_files))
+        found_files = list(filter(lambda l: l.split(".")[-1] in extensions, all_files))
         return found_files
 
 
 class AzureConnection(BaseConnection):
-    STORAGE_TYPE = 'Azure'
+    STORAGE_TYPE = "Azure"
 
-    def __init__(self, name: str = '', params: Union[Box, Dict] = {}):
+    def __init__(self, name: str = "", params: Union[Box, Dict] = {}):
         super().__init__(name, params)
         self.azure = AzureStorageClient(**self.params)
         self.cache = {}
@@ -116,26 +113,23 @@ class AzureConnection(BaseConnection):
         return tmpfile.name
 
     def get_filenames(
-            self,
-            path: str,
-            extensions: Optional[List[str]] = ['png', 'jpg', 'jpeg',
-                                               'bmp']) -> List[str]:
+        self, path: str, extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"]
+    ) -> List[str]:
         extensions = set(extensions + [_.upper() for _ in extensions])
         all_files = self.azure.ls_files(path, recursive=True)
-        found_files = list(
-            filter(lambda l: l.split('.')[-1] in extensions, all_files))
+        found_files = list(filter(lambda l: l.split(".")[-1] in extensions, all_files))
         return found_files
 
 
 class ConnectionManager:
     REGISTERED_STORAGES = [LocalConnection, AzureConnection, S3Connection]
-    SAVE_PATH = '../storage/connections.yaml'
+    SAVE_PATH = "../storage/connections.yaml"
     CURRENT_CONNECTIONS = {}
 
     @classmethod
     def init(cls):
         if not os.path.isfile(cls.SAVE_PATH):
-            with open(cls.SAVE_PATH, 'a') as f:
+            with open(cls.SAVE_PATH, "a") as f:
                 f.write("all_connections: []\n")
 
     @classmethod
@@ -159,17 +153,11 @@ class ConnectionManager:
         return existing.all_connections
 
     @classmethod
-    def create_connection(cls, name: str, storage_type: str,
-                          params: Union[Box, Dict]):
+    def create_connection(cls, name: str, storage_type: str, params: Union[Box, Dict]):
         existing = Box.from_yaml(filename=cls.SAVE_PATH)
         if name in existing:
-            raise NameError(
-                f'Provided connection name {name} is already registered')
-        existing[name] = {
-            'name': name,
-            'storage_type': storage_type,
-            'params': params
-        }
+            raise NameError(f"Provided connection name {name} is already registered")
+        existing[name] = {"name": name, "storage_type": storage_type, "params": params}
         existing.all_connections.append(name)
         existing.to_yaml(filename=cls.SAVE_PATH)
 
@@ -186,10 +174,9 @@ class ConnectionManager:
 
     @classmethod
     def get_filenames(
-            cls,
-            connection_name: str,
-            path: str,
-            extensions: Optional[List[str]] = ['png', 'jpg', 'jpeg',
-                                               'bmp']) -> List[str]:
-        return cls.CURRENT_CONNECTIONS[connection_name].get_filenames(
-            path, extensions)
+        cls,
+        connection_name: str,
+        path: str,
+        extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"],
+    ) -> List[str]:
+        return cls.CURRENT_CONNECTIONS[connection_name].get_filenames(path, extensions)
