@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="true" outlined>
+  <v-card rounded="true" outlined :key="refreshCounter">
     <v-card-text>
       <template>
         <div
@@ -45,11 +45,22 @@ export default {
     },
   },
 
+  data() {
+    return {
+      refreshCounter: 0,
+    };
+  },
+
   components: {
     Attribute,
   },
 
   methods: {
+    forceRerender() {
+      this.refreshCounter += 1;
+      console.log("refreshed to", this.refreshCounter);
+    },
+
     getValue(key) {
       switch (this.type) {
         case "default":

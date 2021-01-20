@@ -40,6 +40,7 @@
               :editing="editing"
               type="default"
               @change="setDefaultAttributeValue"
+              ref="defaultAttributeSet"
             />
             <div :style="{ visibility: editing ? 'visible' : 'hidden' }">
               <v-btn
@@ -91,7 +92,21 @@ export default {
     return {
       editing: false,
       adding: false,
+      refreshCounter: 0,
     };
+  },
+
+  watch: {
+    editing: function (value) {
+      if (!value) {
+        this.$refs.defaultAttributeSet.forceRerender();
+      }
+    },
+    adding: function (value) {
+      if (!value) {
+        this.$refs.defaultAttributeSet.forceRerender();
+      }
+    },
   },
 
   components: {
