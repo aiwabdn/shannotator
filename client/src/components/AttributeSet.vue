@@ -60,7 +60,7 @@ export default {
   methods: {
     forceRerender() {
       this.refreshCounter += 1;
-      console.log("refreshed to", this.refreshCounter);
+      // console.log("refreshed to", this.refreshCounter);
     },
 
     getValue(key) {
