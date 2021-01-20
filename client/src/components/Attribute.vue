@@ -1,20 +1,17 @@
 <template>
-  <div>
-    <v-row>
+  <div class="ma-2">
+    <v-row class="justify-space-around">
       <span class="legend">
         {{ name }}
-        <v-btn
-          icon
-          right
-          x-small
-          v-if="editable"
-          type="button"
-          @click="editing = true"
-          ><v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn icon right x-small v-if="editable" type="button"
-          ><v-icon>mdi-delete</v-icon>
-        </v-btn>
+        <div
+          style="float: right"
+          v-bind:style="{ visibility: editable ? 'visible' : 'hidden' }"
+        >
+          <v-btn icon x-small type="button" @click="editing = true"
+            ><v-icon>mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn icon x-small type="button"><v-icon>mdi-delete</v-icon> </v-btn>
+        </div>
       </span>
     </v-row>
 
@@ -26,6 +23,7 @@
         :value="idx"
         :success="isDefault(idx)"
         :label="value"
+        :disabled="disabled"
         @change="modified(idx)"
       ></v-checkbox>
     </v-row>
@@ -38,6 +36,7 @@
           :value="idx"
           :success="isDefault(idx)"
           :label="value"
+          :disabled="disabled"
           @change="modified(idx)"
         ></v-radio>
       </v-radio-group>
@@ -50,13 +49,13 @@
         clearable
         :value="defaultValue"
         placeholder="Default Text is empty"
+        :disabled="disabled"
         @input="modified($event)"
         @focusin="$store.commit('toggleEditing')"
         @focusout="$store.commit('toggleEditing')"
       />
     </v-row>
     <update-attribute
-      v-if="editable"
       :flag="editing"
       :initial="name"
       @click:outside="editing = false"
@@ -106,6 +105,11 @@ export default {
       default: false,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
 
   methods: {
@@ -150,61 +154,4 @@ export default {
   background-color: #ccf7e2;
   width: 100%;
 }
-/* <!-- <fieldset :id="id"> -->
-  <v-card outlined>
-    <v-card-title>
-      <span class="legend">
-        {{ name }}
-        <v-btn icon right x-small v-if="editable" type="button"
-          ><v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn icon right x-small v-if="editable" type="button"
-          ><v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </span>
-    </v-card-title>
-
-    <v-card-text>
-      <v-row class="justify-space-around" v-if="inputType === 'checkbox'">
-        <v-checkbox
-          v-model="modelValue"
-          v-for="(value, idx) in values"
-          v-bind:key="idx"
-          :value="idx"
-          :success="isDefault(idx)"
-          :label="value"
-          @change="modified(idx)"
-        ></v-checkbox>
-      </v-row>
-
-      <v-row class="justify-space-around" v-if="inputType === 'radio'">
-        <v-radio-group row v-model="modelValue">
-          <v-radio
-            v-for="(value, idx) in values"
-            v-bind:key="idx"
-            :value="idx"
-            :success="isDefault(idx)"
-            :label="value"
-            @change="modified(idx)"
-          ></v-radio>
-        </v-radio-group>
-      </v-row>
-
-      <v-row class="justify-space-around" v-if="inputType === 'text'">
-        <v-text-field
-          outlined
-          dense
-          full-width
-          clearable
-          :value="defaultValue"
-          placeholder="Default Text is empty"
-          @input="modified($event)"
-          @focusin="$store.commit('toggleEditing')"
-          @focusout="$store.commit('toggleEditing')"
-        />
-      </v-row>
-    </v-card-text>
-    <!-- <update-attribute :id="`${name}-editattributemodal`" :initial="name" /> -->
-    <!-- </fieldset> -->
-  </v-card> */
 </style>

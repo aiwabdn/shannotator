@@ -10,7 +10,8 @@
   <v-app id="app">
     <bar />
     <v-main>
-      <v-container fluid fill-height style="border: solid black 2px">
+      <v-container fluid fill-height>
+        <!-- fill-height style="border: solid black 2px"> -->
         <router-view />
       </v-container>
     </v-main>

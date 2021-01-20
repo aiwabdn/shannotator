@@ -1,11 +1,8 @@
 <template>
   <v-row dense>
-    <v-col cols="3" class="d-flex" style="flex-direction: column">
+    <v-col cols="3" class="d-flex">
       <v-container>
-        <!-- <v-card style="height: 50%; max-height: 1000px; overflow: auto">
-        <v-card-text> -->
-        <!-- <div class="halfrow"> -->
-        <v-row class="ma3 halfrow">
+        <v-row fill-height class="mb-2 halfrow">
           <v-col>
             <h2 class="ma-3">Files</h2>
             <list-selector
@@ -15,71 +12,61 @@
             />
           </v-col>
         </v-row>
-        <!-- </div> -->
-        <!-- </v-card-text> -->
-        <!-- </v-card> -->
-        <!-- <v-card style="height: 50%; max-height: 1000px; overflow: auto">
-        <v-card-text>
-          <template> -->
-        <!-- <div class="halfrow"> -->
 
-        <v-row class="ma3 halfrow">
-          <v-col>
-            <v-container fluid>
-              <h2 class="ma-3">
-                Default Attributes
-                <v-btn
-                  icon
-                  right
-                  x-small
-                  v-if="!editing"
-                  type="button"
-                  @click="editing = !editing"
-                  ><v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  right
-                  x-small
-                  v-if="editing"
-                  type="button"
-                  @click="editing = !editing"
-                  ><v-icon>mdi-content-save</v-icon>
-                </v-btn>
-              </h2>
-              <attribute-set
-                :editing="editing"
-                type="default"
-                @change="setDefaultAttributeValue"
-              />
-              <v-row v-if="editing">
-                <v-btn block color="teal lighten-4" @click="adding = !adding">
-                  Add attribute
-                </v-btn>
-                <update-attribute
-                  v-if="editing"
-                  :flag="adding"
-                  @click:outside="adding = false"
-                  @close="adding = false"
-                />
-              </v-row>
-              <v-select
-                outlined
-                full-width
-                clearable
-                dense
-                label="Color region by"
-                placeholder="None"
-                :items="$store.getters.getRadioAttributeNames()"
-                @change="coloringSelected"
-              />
-            </v-container>
+        <v-row fill-height class="mt-2 halfrow">
+          <v-col cols="12">
+            <h2 class="ma-3">
+              Default Attributes
+              <v-btn
+                icon
+                right
+                x-small
+                v-if="!editing"
+                type="button"
+                @click="editing = !editing"
+                ><v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                right
+                x-small
+                v-if="editing"
+                type="button"
+                @click="editing = !editing"
+                ><v-icon>mdi-content-save</v-icon>
+              </v-btn>
+            </h2>
+            <attribute-set
+              :editing="editing"
+              type="default"
+              @change="setDefaultAttributeValue"
+            />
+            <div :style="{ visibility: editing ? 'visible' : 'hidden' }">
+              <v-btn
+                class="ma-3"
+                color="teal lighten-4"
+                @click="adding = !adding"
+              >
+                Add attribute
+              </v-btn>
+            </div>
+            <v-select
+              outlined
+              full-width
+              clearable
+              dense
+              label="Color region by"
+              placeholder="None"
+              :items="$store.getters.getRadioAttributeNames()"
+              @change="coloringSelected"
+            />
+            <update-attribute
+              :flag="adding"
+              @click:outside="adding = false"
+              @close="adding = false"
+            />
           </v-col>
         </v-row>
-        <!-- </div> -->
-        <!-- </template>
-        </v-card-text>
-      </v-card> -->
       </v-container>
     </v-col>
     <v-col cols="9">
@@ -176,7 +163,13 @@ export default {
 
 <style>
 .halfrow {
-  height: 50%;
+  /* height: 50%; */
+  max-height: 40pc;
+  overflow: auto;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.halfrowfluid {
   max-height: 1000px;
   overflow: auto;
   border: 1px solid black;

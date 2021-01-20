@@ -1,25 +1,25 @@
 <template>
-  <v-card>
+  <v-card rounded="true" outlined>
     <v-card-text>
       <template>
         <div
           v-for="(key, idx) in $store.getters.getAttributeNames()"
           v-bind:key="idx"
         >
-          <div v-if="isConditionMet(key) || editing">
-            <attribute
-              :id="`${type}-${key}`"
-              :name="key"
-              :inputType="$store.getters.getAttributeType(key)"
-              :values="$store.getters.getAttributeValues(key)"
-              :defaultValue="getValue(key)"
-              :editable="editing"
-              @change="$emit('change', $event)"
-            />
-          </div>
+          <attribute
+            :id="`${type}-${key}`"
+            :name="key"
+            :inputType="$store.getters.getAttributeType(key)"
+            :values="$store.getters.getAttributeValues(key)"
+            :defaultValue="getValue(key)"
+            :editable="editing"
+            :disabled="!(isConditionMet(key) || editing)"
+            @change="$emit('change', $event)"
+          />
+          <!-- <div v-if="isConditionMet(key) || editing">Hello</div>
           <div v-else>
             {{ clearAttribute(key) }}
-          </div>
+          </div> -->
         </div>
       </template>
     </v-card-text>
