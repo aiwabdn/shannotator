@@ -47,6 +47,27 @@ const COLORS = [
   "#F4A460"
 ];
 
+function getIndeterminateValueForType(type) {
+  let res;
+  switch (type) {
+    case "radio": {
+      res = null;
+      break;
+    }
+    case "checkbox": {
+      res = [];
+      break;
+    }
+    case "text": {
+      res = "";
+      break;
+    }
+    default:
+      res = "";
+  }
+  return res;
+}
+
 export default new Vuex.Store({
   state: _.cloneDeep(defaultState),
 
@@ -95,24 +116,7 @@ export default new Vuex.Store({
     },
 
     getIndeterminateValue: state => name => {
-      let res;
-      switch (state.projectSettings.attributes[name].type) {
-        case "radio": {
-          res = null;
-          break;
-        }
-        case "checkbox": {
-          res = [];
-          break;
-        }
-        case "text": {
-          res = "";
-          break;
-        }
-        default:
-          res = "";
-      }
-      return res;
+      return getIndeterminateValueForType(state.projectSettings.attributes[name].type);
     },
 
     getSelectionPoints: state => () => {
@@ -160,7 +164,9 @@ export default new Vuex.Store({
         values: update.values,
         condition: update.condition
       };
-      [state.currentDefaults[update.name]] = update.values;
+      state.currentDefaults[update.name] = getIndeterminateValueForType(update.type);
+      // console.log('after update', JSON.stringify(state.projectSettings.attributes));
+      // console.log('after update', JSON.stringify(state.currentDefaults));
     },
 
     deleteAttribute(state, name) {
@@ -192,26 +198,28 @@ export default new Vuex.Store({
 
     setProjectSettings(state, settings) {
       state.projectSettings = settings;
-      state.currentDefaults = _.mapValues(state.projectSettings.attributes, function f(o) {
-        let setter;
-        switch (o.type) {
-          case "radio":
-            setter = null;
-            break;
-          case "checkbox":
-            setter = [];
-            break;
-          case "text":
-            setter = "";
-            break;
-          default:
-            break;
-        }
-        return setter;
-      });
+      state.currentDefaults = _.mapValues(state.projectSettings.attributes, (o) => getIndeterminateValueForType(o.type));
+      // state.currentDefaults = _.mapValues(state.projectSettings.attributes, function f(o) {
+      //   let setter;
+      //   switch (o.type) {
+      //     case "radio":
+      //       setter = null;
+      //       break;
+      //     case "checkbox":
+      //       setter = [];
+      //       break;
+      //     case "text":
+      //       setter = "";
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      //   return setter;
+      // });
     },
 
     setDefaultAttribute(state, keyValue) {
+      // console.log('updating default', keyValue);
       switch (state.projectSettings.attributes[keyValue.key].type) {
         case "radio":
           state.currentDefaults[keyValue.key] = keyValue.value;

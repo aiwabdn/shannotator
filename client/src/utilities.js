@@ -22,9 +22,9 @@ async function saveAttributes() {
     method: "POST",
     body: JSON.stringify({
       project: store.state.projectName,
-      attributes: store.state.projectSettings.attributes,
+      attributes: store.state.projectSettings.attributes
     }),
-    headers: { "Content-type": "application/json; charset=UTF-8" },
+    headers: { "Content-type": "application/json; charset=UTF-8" }
   };
   await fetch(`${SERVER_ADDR}/update_attributes`, requestOptions);
 }
@@ -36,9 +36,9 @@ async function saveAnnotations() {
       body: JSON.stringify({
         project: store.state.projectName,
         path: store.getters.getCurrentFileName,
-        annotations: store.state.currentAnnotations,
+        annotations: store.state.currentAnnotations
       }),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers: { "Content-type": "application/json; charset=UTF-8" }
     };
     await fetch(`${SERVER_ADDR}/save_annotation`, requestOptions);
   }
@@ -60,7 +60,6 @@ async function downloadProject(fileFormat) {
       downloadURI(dataURL, `${store.state.projectName}.${fileFormat}`);
     });
 }
-
 
 class CanvasManager {
   static canvas = null;
@@ -87,16 +86,22 @@ class CanvasManager {
   };
 
   static zoomTransform(arrayOfPoints) {
-    return arrayOfPoints.map(p => p * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]);
+    return arrayOfPoints.map(
+      p => p * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]
+    );
   }
 
   static reverseZoomTransform(arrayOfPoints) {
-    return arrayOfPoints.map(p => p / ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]);
+    return arrayOfPoints.map(
+      p => p / ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]
+    );
   }
 
   static zoomOut() {
     CanvasManager.ZOOM_LEVEL_INDEX =
-      CanvasManager.ZOOM_LEVEL_INDEX === 0 ? 0 : CanvasManager.ZOOM_LEVEL_INDEX - 1;
+      CanvasManager.ZOOM_LEVEL_INDEX === 0
+        ? 0
+        : CanvasManager.ZOOM_LEVEL_INDEX - 1;
     CanvasManager.setZoom();
   }
 
@@ -158,20 +163,20 @@ class CanvasManager {
       method: "POST",
       body: JSON.stringify({
         project: store.state.projectName,
-        path: store.getters.getCurrentFileName,
+        path: store.getters.getCurrentFileName
       }),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers: { "Content-type": "application/json; charset=UTF-8" }
     };
     await fetch(`${SERVER_ADDR}/file_request`, requestOptions)
-      .then((response) => response.blob())
-      .then((image) => {
+      .then(response => response.blob())
+      .then(image => {
         const imgUrl = URL.createObjectURL(image);
         CanvasManager.refreshCanvas(imgUrl);
         store.state.currentFileObject = imgUrl;
       });
     await fetch(`${SERVER_ADDR}/annotation_request`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         store.commit("setCurrentAnnotations", data);
         sleep(100).then(() => {
           CanvasManager.drawRegions();
@@ -219,7 +224,8 @@ class CanvasManager {
       top:
         e.pageY -
         CanvasManager.wrapper.getBoundingClientRect().top +
-        CanvasManager.wrapper.scrollTop,
+        CanvasManager.wrapper.scrollTop -
+        window.pageYOffset,
       width: 0,
       height: 0
     };
@@ -227,20 +233,24 @@ class CanvasManager {
 
   static handleMouseMove(e) {
     if (!CanvasManager.drawingBox.active) return;
-    CanvasManager.handleScroll(e);
+    // CanvasManager.handleScroll(e);
     const currentLeft =
       e.pageX -
       CanvasManager.wrapper.getBoundingClientRect().left +
       CanvasManager.wrapper.scrollLeft;
     const currentTop =
-      e.pageY - CanvasManager.wrapper.getBoundingClientRect().top + CanvasManager.wrapper.scrollTop;
+      e.pageY -
+      CanvasManager.wrapper.getBoundingClientRect().top +
+      CanvasManager.wrapper.scrollTop -
+      window.pageYOffset;
     CanvasManager.canvasCtx.clearRect(
       0,
       0,
       CanvasManager.canvas.width,
       CanvasManager.canvas.height
     );
-    CanvasManager.drawingBox.width = currentLeft - CanvasManager.drawingBox.left;
+    CanvasManager.drawingBox.width =
+      currentLeft - CanvasManager.drawingBox.left;
     CanvasManager.drawingBox.height = currentTop - CanvasManager.drawingBox.top;
     CanvasManager.drawRect(
       CanvasManager.drawingBox.left,
@@ -252,12 +262,16 @@ class CanvasManager {
   }
 
   static handleMouseUp(e) {
+    // console.log(window.pageYOffset, window.pageXOffset);
     const currentLeft =
       e.pageX -
       CanvasManager.wrapper.getBoundingClientRect().left +
       CanvasManager.wrapper.scrollLeft;
     const currentTop =
-      e.pageY - CanvasManager.wrapper.getBoundingClientRect().top + CanvasManager.wrapper.scrollTop;
+      e.pageY -
+      CanvasManager.wrapper.getBoundingClientRect().top +
+      CanvasManager.wrapper.scrollTop -
+      window.pageYOffset;
     let bbox = [
       Math.min(CanvasManager.drawingBox.left, currentLeft),
       Math.min(CanvasManager.drawingBox.top, currentTop),
@@ -302,8 +316,12 @@ class CanvasManager {
   }
 
   static findSmallestContainingBox(e) {
-    const detectedLeft = e.pageX - CanvasManager.canvas.getBoundingClientRect().left; // + CanvasManager.wrapper.scrollLeft;
-    const detectedTop = e.pageY - CanvasManager.canvas.getBoundingClientRect().top; // + CanvasManager.wrapper.scrollTop;
+    const detectedLeft =
+      e.pageX - CanvasManager.canvas.getBoundingClientRect().left; // + CanvasManager.wrapper.scrollLeft;
+    const detectedTop =
+      e.pageY -
+      CanvasManager.canvas.getBoundingClientRect().top -
+      window.pageYOffset; // + CanvasManager.wrapper.scrollTop;
     const [currentLeft, currentTop] = CanvasManager.reverseZoomTransform([
       detectedLeft,
       detectedTop
@@ -324,10 +342,11 @@ class CanvasManager {
       result = picked[0].points;
     } else {
       result = _.minBy(picked, function b(box) {
-        return (box.points[2] - box.points[0]) * (box.points[3] - box.points[1]);
+        return (
+          (box.points[2] - box.points[0]) * (box.points[3] - box.points[1])
+        );
       }).points;
     }
-    // console.log("result", result);
     return result;
   }
 
@@ -428,4 +447,11 @@ class CanvasManager {
 }
 
 // eslint-disable-next-line
-export { CanvasManager, sleep, downloadProject, saveAnnotations, saveAttributes, SERVER_ADDR };
+export {
+  CanvasManager,
+  sleep,
+  downloadProject,
+  saveAnnotations,
+  saveAttributes,
+  SERVER_ADDR
+};

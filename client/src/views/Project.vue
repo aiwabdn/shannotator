@@ -178,17 +178,10 @@ export default {
 
 <style>
 .halfrow {
-  /* height: 50%; */
   height: 40pc;
   max-height: 40pc;
   overflow: auto;
-  border: 1px solid black;
-  border-radius: 10px;
-}
-.halfrowfluid {
-  max-height: 1000px;
-  overflow: auto;
-  border: 1px solid black;
+  border: 2px solid black;
   border-radius: 5px;
 }
 </style>

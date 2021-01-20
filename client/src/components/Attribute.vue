@@ -68,6 +68,8 @@
 
 <script>
 import UpdateAttribute from "./forms/UpdateAttribute.vue";
+import _ from "lodash";
+
 export default {
   name: "Attribute",
 
@@ -78,6 +80,7 @@ export default {
   data() {
     return {
       editing: false,
+      disabled: !this.isConditionMet(),
     };
   },
 
@@ -107,10 +110,9 @@ export default {
       default: false,
       required: false,
     },
-    disabled: {
-      type: Boolean,
-      default: false,
-      required: false,
+    type: {
+      type: String,
+      required: true,
     },
   },
 
@@ -135,6 +137,67 @@ export default {
       }
       return res;
     },
+
+    getValue(key) {
+      switch (this.type) {
+        case "default":
+          return this.$store.getters.getDefaultValue(key);
+        case "selection":
+          return this.$store.getters.getSelectionValue(key);
+        default:
+          break;
+      }
+    },
+
+    isConditionMet() {
+      const condition = this.$store.getters.getCondition(this.name);
+      if (_.isEmpty(condition)) {
+        return true;
+      }
+
+      let res = false;
+      const [[k, v]] = _.toPairs(condition);
+
+      if (!this.$store.getters.getAttributeNames().includes(k)) return true;
+
+      const currentValue = this.getValue(k);
+      switch (this.$store.getters.getAttributeType(k)) {
+        case "radio":
+          res = v === currentValue;
+          break;
+        case "text":
+          res = true;
+          break;
+        case "checkbox": {
+          res = _.isEqual(_.sortBy(v), _.sortBy(currentValue));
+          break;
+        }
+        default:
+          break;
+      }
+      return res;
+    },
+
+    clearValue() {
+      switch (this.type) {
+        case "default": {
+          this.$store.state.currentDefaults[
+            this.name
+          ] = this.$store.getters.getIndeterminateValue(this.name);
+          break;
+        }
+        case "selection": {
+          this.$store.state.currentAnnotations.regions[
+            this.$store.state.currentSelectionIndex
+          ].attributes[this.name] = this.$store.getters.getIndeterminateValue(
+            this.name
+          );
+          break;
+        }
+        default:
+          break;
+      }
+    },
   },
 
   computed: {
@@ -147,6 +210,26 @@ export default {
         return;
       },
     },
+  },
+
+  created() {
+    this.unwatch = this.$store.subscribe((mutation) => {
+      // console.log(JSON.stringify(mutation));
+      if (
+        ["setDefaultAttribute", "setSelectionAttribute"].includes(mutation.type)
+      ) {
+        if (this.isConditionMet()) {
+          this.disabled = false;
+        } else {
+          this.disabled = true;
+          this.clearValue();
+        }
+      }
+    });
+  },
+
+  beforeDestroy() {
+    this.unwatch();
   },
 };
 </script>

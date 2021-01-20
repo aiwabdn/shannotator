@@ -44,21 +44,30 @@
               label="Condition"
               placeholder="Select an attribute to condition on"
               required
+              @change="setDefaultConditionValue()"
             ></v-select>
-            <div v-if="conditionName && conditionName.length > 0">
+
+            <div
+              v-bind:style="{
+                visibility:
+                  conditionName && conditionName.length > 0
+                    ? 'visible'
+                    : 'hidden',
+              }"
+            >
+              <span>Select conditional value for {{ conditionName }}</span>
               <v-row
                 class="justify-space-around"
                 v-if="conditionType === 'checkbox'"
               >
                 <v-checkbox
-                  v-model="modelValue"
+                  v-model="conditionValue"
                   v-for="(value, idx) in $store.getters.getAttributeValues(
                     conditionName
                   )"
                   v-bind:key="idx"
-                  :value="value"
+                  :value="idx"
                   :label="value"
-                  @change="setConditionValue(value)"
                 ></v-checkbox>
               </v-row>
 
@@ -66,15 +75,14 @@
                 class="justify-space-around"
                 v-if="conditionType === 'radio'"
               >
-                <v-radio-group row v-model="modelValue">
+                <v-radio-group row v-model="conditionValue">
                   <v-radio
                     v-for="(value, idx) in $store.getters.getAttributeValues(
                       conditionName
                     )"
                     v-bind:key="idx"
-                    :value="value"
+                    :value="idx"
                     :label="value"
-                    @change="setConditionValue(value)"
                   ></v-radio>
                 </v-radio-group>
               </v-row>
@@ -109,10 +117,7 @@ export default {
       type: Boolean,
       required: true,
     },
-    // id: {
-    //   type: String,
-    //   required: true,
-    // },
+
     initial: {
       type: String,
       default: "",
@@ -169,6 +174,18 @@ export default {
       }
     },
 
+    setDefaultConditionValue() {
+      if (this.initial.length === 0) {
+        if (
+          this.$store.getters.getAttributeType(this.conditionName) ===
+          "checkbox"
+        ) {
+          this.conditionValue = [];
+          console.log("checkbox type", this.conditionValue);
+        }
+      }
+    },
+
     updateAttribute() {
       if (this.attributeName === "") {
         console.log("provide a name for the attribute");
@@ -195,7 +212,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     if (this.initial.length > 0) {
       this.attributeName = this.initial;
       // console.log("getting attrib type", this.initial);
@@ -216,7 +233,7 @@ export default {
 
   computed: {
     conditionType() {
-      if (this.conditionName.length > 0) {
+      if (this.conditionName && this.conditionName.length > 0) {
         return this.$store.getters.getAttributeType(this.conditionName);
       }
       return "";
