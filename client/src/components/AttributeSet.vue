@@ -15,6 +15,7 @@
             :editable="editing"
             :disabled="!(isConditionMet(key) || editing)"
             @change="$emit('change', $event)"
+            @delete="deleteAttribute(key)"
           />
           <!-- <div v-if="isConditionMet(key) || editing">Hello</div>
           <div v-else>
@@ -28,6 +29,7 @@
 
 <script>
 import Attribute from "@/components/Attribute.vue";
+import { saveAttributes } from "../utilities";
 import _ from "lodash";
 
 export default {
@@ -121,6 +123,12 @@ export default {
         default:
           break;
       }
+    },
+
+    deleteAttribute(name) {
+      this.$store.commit("deleteAttribute", name);
+      this.forceRerender();
+      saveAttributes();
     },
   },
 };

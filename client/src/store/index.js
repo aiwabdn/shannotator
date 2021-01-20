@@ -163,6 +163,20 @@ export default new Vuex.Store({
       [state.currentDefaults[update.name]] = update.values;
     },
 
+    deleteAttribute(state, name) {
+      delete state.projectSettings.attributes[name];
+      delete state.currentDefaults[name];
+      if (name === state.coloringAttribute) {
+        state.coloringAttribute = null;
+        state.colorMap = {};
+      }
+      state.currentAnnotations.regions.forEach((item) => {
+        if (name in item.attributes) {
+          delete item.attributes[name];
+        }
+      });
+    },
+
     addBox(state, bbox) {
       const region = {
         attributes: _.cloneDeep(state.currentDefaults),

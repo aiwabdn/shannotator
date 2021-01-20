@@ -17,6 +17,18 @@ function downloadURI(uri, name) {
   link.click();
 }
 
+async function saveAttributes() {
+  const requestOptions = {
+    method: "POST",
+    body: JSON.stringify({
+      project: store.state.projectName,
+      attributes: store.state.projectSettings.attributes,
+    }),
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+  };
+  await fetch(`${SERVER_ADDR}/update_attributes`, requestOptions);
+}
+
 async function saveAnnotations() {
   if (store.state.currentFileIndex > -1) {
     const requestOptions = {
@@ -416,4 +428,4 @@ class CanvasManager {
 }
 
 // eslint-disable-next-line
-export { CanvasManager, sleep, downloadProject, saveAnnotations, SERVER_ADDR };
+export { CanvasManager, sleep, downloadProject, saveAnnotations, saveAttributes, SERVER_ADDR };

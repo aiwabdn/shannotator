@@ -96,7 +96,7 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-import { SERVER_ADDR } from "../../utilities";
+import { saveAttributes } from "../../utilities";
 import _ from "lodash";
 
 export default {
@@ -182,7 +182,7 @@ export default {
         condition: this.getParsedCondition(),
       };
       this.$store.commit("updateAttribute", update);
-      this.saveAttributes();
+      saveAttributes();
       this.showing = false;
     },
 
@@ -192,18 +192,6 @@ export default {
         condition[this.conditionName] = this.conditionValue;
       }
       return condition;
-    },
-
-    saveAttributes() {
-      const requestOptions = {
-        method: "POST",
-        body: JSON.stringify({
-          project: this.$store.state.projectName,
-          attributes: this.$store.state.projectSettings.attributes,
-        }),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      };
-      fetch(`${SERVER_ADDR}/update_attributes`, requestOptions);
     },
   },
 

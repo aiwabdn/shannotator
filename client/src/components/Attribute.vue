@@ -10,7 +10,9 @@
           <v-btn icon x-small type="button" @click="editing = true"
             ><v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon x-small type="button"><v-icon>mdi-delete</v-icon> </v-btn>
+          <v-btn icon x-small type="button" @click="$emit('delete')"
+            ><v-icon>mdi-delete</v-icon>
+          </v-btn>
         </div>
       </span>
     </v-row>
