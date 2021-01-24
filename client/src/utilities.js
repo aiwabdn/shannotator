@@ -448,6 +448,7 @@ class CanvasManager {
 
 // eslint-disable-next-line
 export {
+  ALLOWED_ZOOM_LEVELS,
   CanvasManager,
   sleep,
   downloadProject,

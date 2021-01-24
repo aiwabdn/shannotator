@@ -21,8 +21,8 @@
       >
         <Annotation
           id="selection"
-          :left="$store.getters.getSelectionPoints()[2]"
-          :top="$store.getters.getSelectionPoints()[3]"
+          :left="getLeft()"
+          :top="getTop()"
         />
       </div>
     </div>
@@ -31,7 +31,7 @@
 
 <script>
 import Annotation from "@/components/Annotation.vue";
-import { CanvasManager } from "../utilities";
+import { ALLOWED_ZOOM_LEVELS, CanvasManager } from "../utilities";
 
 export default {
   name: "AnnotationCanvas",
@@ -41,6 +41,14 @@ export default {
   },
 
   methods: {
+    getLeft() {
+      return this.$store.getters.getSelectionPoints()[2] * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX];
+    },
+
+    getTop() {
+      return this.$store.getters.getSelectionPoints()[3] * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX];
+    },
+
     startDrawing(e) {
       CanvasManager.handleMouseDown(e);
     },
