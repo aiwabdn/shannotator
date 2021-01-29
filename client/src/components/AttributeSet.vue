@@ -34,22 +34,22 @@ export default {
     editing: {
       type: Boolean,
       required: false,
-      default: false,
+      default: false
     },
     type: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
-      refreshCounter: 0,
+      refreshCounter: 0
     };
   },
 
   components: {
-    Attribute,
+    Attribute
   },
 
   methods: {
@@ -73,7 +73,7 @@ export default {
       this.$store.commit("deleteAttribute", name);
       this.forceRerender();
       saveAttributes();
-    },
-  },
+    }
+  }
 };
 </script>

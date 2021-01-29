@@ -2,6 +2,7 @@
 node_modules
 storage
 /dist
+client/package-lock.json
 
 
 # local env files

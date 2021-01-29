@@ -63,8 +63,8 @@ export default {
   props: {
     flag: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
@@ -72,21 +72,21 @@ export default {
       name: "",
       storageType: "",
       supportedStorages: {
-        Local: [],
+        Local: []
       },
       showParams: false,
-      parameters: {},
+      parameters: {}
       //   showing: this.flag,
     };
   },
 
   validations: {
     name: {
-      required,
+      required
     },
     storageType: {
-      required,
-    },
+      required
+    }
   },
 
   methods: {
@@ -96,11 +96,11 @@ export default {
         body: JSON.stringify({
           name: this.name,
           storage_type: this.storageType,
-          params: this.parameters,
+          params: this.parameters
         }),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
+        headers: { "Content-type": "application/json; charset=UTF-8" }
       };
-      fetch(`${SERVER_ADDR}/create_connection`, requestOptions).catch((e) => {
+      fetch(`${SERVER_ADDR}/create_connection`, requestOptions).catch(e => {
         console.log(e);
         return e;
       });
@@ -108,7 +108,7 @@ export default {
     },
 
     createStorageParams() {
-      this.supportedStorages[this.storageType].forEach((item) => {
+      this.supportedStorages[this.storageType].forEach(item => {
         this.parameters[item.name] = "";
       });
       console.log(this.parameters);
@@ -116,19 +116,19 @@ export default {
     setParam(key, value) {
       this.parameters[key] = value;
       console.log(this.parameters);
-    },
+    }
   },
 
   computed: {
     showing: {
-      get: function () {
+      get: function() {
         return this.flag;
       },
-      set: function (value) {
+      set: function(value) {
         if (!value) {
           this.$emit("close");
         }
-      },
+      }
     },
     selectErrors() {
       const errors = [];
@@ -143,21 +143,21 @@ export default {
       //     errors.push("Name must be at most 10 characters long");
       //   !this.$v.name.required && errors.push("Name is required.");
       return errors;
-    },
+    }
   },
 
   mounted() {
     const requestOptions = {
-      method: "GET",
+      method: "GET"
     };
 
     fetch(`${SERVER_ADDR}/supported_storages`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => (this.supportedStorages = data.storage_types))
-      .catch((e) => {
+      .then(response => response.json())
+      .then(data => (this.supportedStorages = data.storage_types))
+      .catch(e => {
         console.log(e);
         return e;
       });
-  },
+  }
 };
 </script>

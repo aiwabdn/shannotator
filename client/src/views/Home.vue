@@ -34,21 +34,27 @@
         Load Project
       </v-btn>
     </div>
-    <create-connection
-      :flag="newConnection"
-      @click:outside="newConnection = false"
-      @close="newConnection = false"
-    />
-    <create-project
-      :flag="newProject"
-      @click:outside="newProject = false"
-      @close="newProject = false"
-    />
-    <load-project
-      :flag="loadProject"
-      @click:outside="loadProject = false"
-      @close="loadProject = false"
-    />
+    <div v-if="newConnection">
+      <create-connection
+        :flag="newConnection"
+        @click:outside="newConnection = false"
+        @close="newConnection = false"
+      />
+    </div>
+    <div v-if="newProject">
+      <create-project
+        :flag="newProject"
+        @click:outside="newProject = false"
+        @close="newProject = false"
+      />
+    </div>
+    <div v-if="loadProject">
+      <load-project
+        :flag="loadProject"
+        @click:outside="loadProject = false"
+        @close="loadProject = false"
+      />
+    </div>
     <!-- </v-container> -->
   </div>
 </template>
@@ -64,14 +70,14 @@ export default {
   components: {
     CreateConnection,
     CreateProject,
-    LoadProject,
+    LoadProject
   },
 
   data() {
     return {
       newConnection: false,
       newProject: false,
-      loadProject: false,
+      loadProject: false
     };
   },
 
@@ -79,7 +85,7 @@ export default {
 
   mounted() {
     this.$store.commit("reset");
-  },
+  }
 };
 </script>
 

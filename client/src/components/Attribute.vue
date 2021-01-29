@@ -80,40 +80,40 @@ export default {
   data() {
     return {
       editing: false,
-      disabled: !this.isConditionMet(),
+      disabled: !this.isConditionMet()
     };
   },
 
   props: {
     id: {
       type: String,
-      required: true,
+      required: true
     },
     name: {
       type: String,
-      required: true,
+      required: true
     },
     inputType: {
       type: String,
-      required: true,
+      required: true
     },
     values: {
       type: [String, Array],
-      required: true,
+      required: true
     },
     defaultValue: {
       type: [Number, String, Array],
-      required: false,
+      required: false
     },
     editable: {
       type: Boolean,
       default: false,
-      required: false,
+      required: false
     },
     type: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   methods: {
@@ -197,23 +197,23 @@ export default {
         default:
           break;
       }
-    },
+    }
   },
 
   computed: {
     modelValue: {
-      get: function () {
+      get: function() {
         return this.defaultValue;
       },
-      set: function () {
+      set: function() {
         // do nothing here as we are emitting the changes
         return;
-      },
-    },
+      }
+    }
   },
 
   created() {
-    this.unwatch = this.$store.subscribe((mutation) => {
+    this.unwatch = this.$store.subscribe(mutation => {
       // console.log(JSON.stringify(mutation));
       if (
         ["setDefaultAttribute", "setSelectionAttribute"].includes(mutation.type)
@@ -230,7 +230,7 @@ export default {
 
   beforeDestroy() {
     this.unwatch();
-  },
+  }
 };
 </script>
 

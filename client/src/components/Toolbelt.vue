@@ -90,12 +90,12 @@ export default {
 
   data() {
     return {
-      downloading: false,
+      downloading: false
     };
   },
 
   components: {
-    Download,
+    Download
   },
 
   methods: {
@@ -130,7 +130,7 @@ export default {
 
     closeProject() {
       this.$router.replace({ name: "Home" });
-    },
-  },
+    }
+  }
 };
 </script>

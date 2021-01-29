@@ -52,7 +52,7 @@
                 visibility:
                   conditionName && conditionName.length > 0
                     ? 'visible'
-                    : 'hidden',
+                    : 'hidden'
               }"
             >
               <span>Select conditional value for {{ conditionName }}</span>
@@ -115,13 +115,13 @@ export default {
   props: {
     flag: {
       type: Boolean,
-      required: true,
+      required: true
     },
 
     initial: {
       type: String,
-      default: "",
-    },
+      default: ""
+    }
   },
 
   data() {
@@ -132,20 +132,20 @@ export default {
       attributeValues: "",
       conditionName: "",
       conditionValue: "",
-      modelValue: "",
+      modelValue: ""
     };
   },
 
   validations: {
     name: {
-      required,
+      required
     },
     connectionName: {
-      required,
+      required
     },
     path: {
-      required,
-    },
+      required
+    }
   },
 
   methods: {
@@ -196,7 +196,7 @@ export default {
         type: this.attributeType,
         values:
           this.attributeType === "text" ? "" : this.attributeValues.split(","),
-        condition: this.getParsedCondition(),
+        condition: this.getParsedCondition()
       };
       this.$store.commit("updateAttribute", update);
       saveAttributes();
@@ -209,7 +209,7 @@ export default {
         condition[this.conditionName] = this.conditionValue;
       }
       return condition;
-    },
+    }
   },
 
   mounted() {
@@ -239,14 +239,14 @@ export default {
       return "";
     },
     showing: {
-      get: function () {
+      get: function() {
         return this.flag;
       },
-      set: function (value) {
+      set: function(value) {
         if (!value) {
           this.$emit("close");
         }
-      },
+      }
     },
     pathErrors() {
       const errors = [];
@@ -267,7 +267,7 @@ export default {
     conditionNameErrors() {
       const errors = [];
       return errors;
-    },
-  },
+    }
+  }
 };
 </script>

@@ -36,34 +36,34 @@ export default {
   props: {
     flag: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
       chosenType: "",
-      supportedFileTypes: ["json", "yaml"],
+      supportedFileTypes: ["json", "yaml"]
     };
   },
 
   methods: {
     chosenFormat() {
       this.$emit("selected", this.chosenType);
-    },
+    }
   },
 
   computed: {
     showing: {
-      get: function () {
+      get: function() {
         return this.flag;
       },
-      set: function (value) {
+      set: function(value) {
         if (!value) {
           this.$emit("close");
         }
-      },
-    },
-  },
+      }
+    }
+  }
 };
 </script>

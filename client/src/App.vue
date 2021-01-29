@@ -23,8 +23,8 @@ import Bar from "@/components/Bar.vue";
 
 export default {
   components: {
-    Bar,
-  },
+    Bar
+  }
 };
 </script>
 <style>

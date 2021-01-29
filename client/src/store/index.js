@@ -3,7 +3,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
-
 Vue.use(Vuex);
 
 const defaultAnnotations = {
@@ -27,14 +26,14 @@ const defaultState = {
 };
 
 // https://www.w3schools.com/colors/colors_hex.asp
-// blue, deep-sky-blue, medium-spring-green, aqua, cyan, royal-blue, indigo, slate-blue, purple, dark-red, orchid, gold, yellow, khaki, olive, sandy-brown
+// aquamarine, deep-sky-blue, medium-spring-green, aqua, cyan, violet, indigo, slate-blue, purple, dark-red, orchid, gold, yellow, khaki, olive, sandy-brown
 const COLORS = [
-  "#0000FF",
+  "#7FFFD4",
   "#00BFFF",
   "#00FA9A",
   "#00FFFF",
   "#00FFFF",
-  "#4169E1",
+  "#EE82EE",
   "#4B0082",
   "#6A5ACD",
   "#800080",
@@ -109,20 +108,25 @@ export default new Vuex.Store({
     getSelectionValue: (state, getters) => name => {
       let res;
       if (state.currentSelectionIndex > -1) {
-        res = state.currentAnnotations.regions[state.currentSelectionIndex].attributes[name];
+        res =
+          state.currentAnnotations.regions[state.currentSelectionIndex]
+            .attributes[name];
       }
       res = res ?? getters.getIndeterminateValue(name);
       return res;
     },
 
     getIndeterminateValue: state => name => {
-      return getIndeterminateValueForType(state.projectSettings.attributes[name].type);
+      return getIndeterminateValueForType(
+        state.projectSettings.attributes[name].type
+      );
     },
 
     getSelectionPoints: state => () => {
       let res = [0, 0, 0, 0];
       if (state.currentSelectionIndex > -1) {
-        res = state.currentAnnotations.regions[state.currentSelectionIndex].points;
+        res =
+          state.currentAnnotations.regions[state.currentSelectionIndex].points;
       }
       // console.log("selection points", JSON.stringify(res));
       return res;
@@ -164,7 +168,9 @@ export default new Vuex.Store({
         values: update.values,
         condition: update.condition
       };
-      state.currentDefaults[update.name] = getIndeterminateValueForType(update.type);
+      state.currentDefaults[update.name] = getIndeterminateValueForType(
+        update.type
+      );
       // console.log('after update', JSON.stringify(state.projectSettings.attributes));
       // console.log('after update', JSON.stringify(state.currentDefaults));
     },
@@ -176,7 +182,7 @@ export default new Vuex.Store({
         state.coloringAttribute = null;
         state.colorMap = {};
       }
-      state.currentAnnotations.regions.forEach((item) => {
+      state.currentAnnotations.regions.forEach(item => {
         if (name in item.attributes) {
           delete item.attributes[name];
         }
@@ -198,7 +204,9 @@ export default new Vuex.Store({
 
     setProjectSettings(state, settings) {
       state.projectSettings = settings;
-      state.currentDefaults = _.mapValues(state.projectSettings.attributes, (o) => getIndeterminateValueForType(o.type));
+      state.currentDefaults = _.mapValues(state.projectSettings.attributes, o =>
+        getIndeterminateValueForType(o.type)
+      );
       // state.currentDefaults = _.mapValues(state.projectSettings.attributes, function f(o) {
       //   let setter;
       //   switch (o.type) {
@@ -225,7 +233,9 @@ export default new Vuex.Store({
           state.currentDefaults[keyValue.key] = keyValue.value;
           break;
         case "checkbox": {
-          const idx = state.currentDefaults[keyValue.key].indexOf(keyValue.value);
+          const idx = state.currentDefaults[keyValue.key].indexOf(
+            keyValue.value
+          );
           if (idx > -1) {
             state.currentDefaults[keyValue.key].splice(idx, 1);
           } else {
@@ -247,7 +257,9 @@ export default new Vuex.Store({
       if (state.currentSelectionIndex > -1) {
         if (
           !(
-            keyValue.key in state.currentAnnotations.regions[state.currentSelectionIndex].attributes
+            keyValue.key in
+            state.currentAnnotations.regions[state.currentSelectionIndex]
+              .attributes
           )
         ) {
           let res;
@@ -267,33 +279,35 @@ export default new Vuex.Store({
             default:
               res = "";
           }
-          state.currentAnnotations.regions[state.currentSelectionIndex].attributes[
-            keyValue.key
-          ] = res;
+          state.currentAnnotations.regions[
+            state.currentSelectionIndex
+          ].attributes[keyValue.key] = res;
         }
         switch (state.projectSettings.attributes[keyValue.key].type) {
           case "radio":
-            state.currentAnnotations.regions[state.currentSelectionIndex].attributes[keyValue.key] =
-              keyValue.value;
+            state.currentAnnotations.regions[
+              state.currentSelectionIndex
+            ].attributes[keyValue.key] = keyValue.value;
             break;
           case "checkbox": {
-            const idx = state.currentAnnotations.regions[state.currentSelectionIndex].attributes[
-              keyValue.key
-            ].indexOf(keyValue.value);
+            const idx = state.currentAnnotations.regions[
+              state.currentSelectionIndex
+            ].attributes[keyValue.key].indexOf(keyValue.value);
             if (idx > -1) {
-              state.currentAnnotations.regions[state.currentSelectionIndex].attributes[
-                keyValue.key
-              ].splice(idx, 1);
+              state.currentAnnotations.regions[
+                state.currentSelectionIndex
+              ].attributes[keyValue.key].splice(idx, 1);
             } else {
-              state.currentAnnotations.regions[state.currentSelectionIndex].attributes[
-                keyValue.key
-              ].push(keyValue.value);
+              state.currentAnnotations.regions[
+                state.currentSelectionIndex
+              ].attributes[keyValue.key].push(keyValue.value);
             }
             break;
           }
           case "text":
-            state.currentAnnotations.regions[state.currentSelectionIndex].attributes[keyValue.key] =
-              keyValue.value;
+            state.currentAnnotations.regions[
+              state.currentSelectionIndex
+            ].attributes[keyValue.key] = keyValue.value;
             break;
           default:
             // console.log("selection type not found");
@@ -317,7 +331,9 @@ export default new Vuex.Store({
     },
 
     setCurrentFileIndex(state, filename) {
-      state.currentFileIndex = state.projectFiles.findIndex(fname => fname === filename);
+      state.currentFileIndex = state.projectFiles.findIndex(
+        fname => fname === filename
+      );
       state.currentAnnotations = _.cloneDeep(defaultAnnotations);
     },
 
@@ -349,14 +365,16 @@ export default new Vuex.Store({
 
     setSelectedBox(state, bbox) {
       if (bbox) {
-        state.currentSelectionIndex = state.currentAnnotations.regions.findIndex(region => {
-          return (
-            region.points[0] === bbox[0] &&
-            region.points[1] === bbox[1] &&
-            region.points[2] === bbox[2] &&
-            region.points[3] === bbox[3]
-          );
-        });
+        state.currentSelectionIndex = state.currentAnnotations.regions.findIndex(
+          region => {
+            return (
+              region.points[0] === bbox[0] &&
+              region.points[1] === bbox[1] &&
+              region.points[2] === bbox[2] &&
+              region.points[3] === bbox[3]
+            );
+          }
+        );
       } else {
         state.currentSelectionIndex = -1;
       }
@@ -367,7 +385,10 @@ export default new Vuex.Store({
       state.colorMap = {};
       state.coloringAttribute = name;
       if (name) {
-        state.projectSettings.attributes[name].values.forEach(function f(item, idx) {
+        state.projectSettings.attributes[name].values.forEach(function f(
+          item,
+          idx
+        ) {
           state.colorMap[idx] = COLORS[idx];
         });
       }

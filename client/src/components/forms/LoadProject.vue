@@ -38,21 +38,21 @@ export default {
   props: {
     flag: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
     return {
       name: "",
-      projects: [],
+      projects: []
     };
   },
 
   validations: {
     name: {
-      required,
-    },
+      required
+    }
   },
 
   methods: {
@@ -60,37 +60,37 @@ export default {
       this.$store.commit("setProjectName", this.name);
       this.showing = false;
       this.$router.push({ name: "Project" });
-    },
+    }
   },
 
   mounted() {
     const requestOptions = {
-      method: "GET",
+      method: "GET"
     };
     fetch(`${SERVER_ADDR}/saved_project_names`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         this.projects = data.data;
       });
   },
 
   computed: {
     showing: {
-      get: function () {
+      get: function() {
         return this.flag;
       },
-      set: function (value) {
+      set: function(value) {
         if (!value) {
           this.$emit("close");
         }
-      },
+      }
     },
     selectErrors() {
       const errors = [];
       //   if (!this.$v.select.$dirty) return errors;
       //   !this.$v.select.required && errors.push("Item is required");
       return errors;
-    },
-  },
+    }
+  }
 };
 </script>

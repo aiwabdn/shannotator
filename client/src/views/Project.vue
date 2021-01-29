@@ -92,21 +92,21 @@ export default {
     return {
       editing: false,
       adding: false,
-      refreshCounter: 0,
+      refreshCounter: 0
     };
   },
 
   watch: {
-    editing: function (value) {
+    editing: function(value) {
       if (!value) {
         this.$refs.defaultAttributeSet.forceRerender();
       }
     },
-    adding: function (value) {
+    adding: function(value) {
       if (!value) {
         this.$refs.defaultAttributeSet.forceRerender();
       }
-    },
+    }
   },
 
   components: {
@@ -114,7 +114,7 @@ export default {
     ListSelector,
     AnnotationCanvas,
     AttributeSet,
-    UpdateAttribute,
+    UpdateAttribute
   },
 
   methods: {
@@ -138,24 +138,24 @@ export default {
         this.$store.state.projectFiles[fileIndex]
       );
       CanvasManager.loadImage();
-    },
+    }
   },
 
   created() {
     fetch(`${SERVER_ADDR}/load_project/${this.$store.state.projectName}`, {
-      method: "POST",
+      method: "POST"
     })
-      .then((dummy) => {
+      .then(dummy => {
         console.log(dummy.json());
         const requestOptions = {
-          method: "GET",
+          method: "GET"
         };
         fetch(
           `${SERVER_ADDR}/project_settings/${this.$store.state.projectName}`,
           requestOptions
         )
-          .then((response) => response.json())
-          .then((data) => {
+          .then(response => response.json())
+          .then(data => {
             this.$store.commit("setProjectSettings", data.settings);
             sleep(100);
           });
@@ -163,16 +163,16 @@ export default {
           `${SERVER_ADDR}/project_files/${this.$store.state.projectName}`,
           requestOptions
         )
-          .then((response) => response.json())
-          .then((data) => {
+          .then(response => response.json())
+          .then(data => {
             this.$store.commit("setProjectFiles", data.data);
           });
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
         return e;
       });
-  },
+  }
 };
 </script>
 

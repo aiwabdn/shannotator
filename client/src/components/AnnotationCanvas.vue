@@ -19,11 +19,7 @@
         v-if="$store.state.currentSelectionIndex > -1"
         v-bind:key="$store.state.currentSelectionIndex"
       >
-        <Annotation
-          id="selection"
-          :left="getLeft()"
-          :top="getTop()"
-        />
+        <Annotation id="selection" :left="getLeft()" :top="getTop()" />
       </div>
     </div>
   </v-container>
@@ -37,16 +33,22 @@ export default {
   name: "AnnotationCanvas",
 
   components: {
-    Annotation,
+    Annotation
   },
 
   methods: {
     getLeft() {
-      return this.$store.getters.getSelectionPoints()[2] * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX];
+      return (
+        this.$store.getters.getSelectionPoints()[2] *
+        ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]
+      );
     },
 
     getTop() {
-      return this.$store.getters.getSelectionPoints()[3] * ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX];
+      return (
+        this.$store.getters.getSelectionPoints()[3] *
+        ALLOWED_ZOOM_LEVELS[CanvasManager.ZOOM_LEVEL_INDEX]
+      );
     },
 
     startDrawing(e) {
@@ -59,7 +61,7 @@ export default {
 
     stopDrawing(e) {
       CanvasManager.handleMouseUp(e);
-    },
+    }
   },
 
   mounted() {
@@ -67,7 +69,7 @@ export default {
     CanvasManager.registerCanvas(document.getElementById("anno-canvas"));
     CanvasManager.refreshCanvas();
     window.addEventListener("keyup", CanvasManager.handleKeyPress);
-  },
+  }
 };
 </script>
 

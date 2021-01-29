@@ -23,13 +23,13 @@ export default {
   props: {
     items: {
       type: Array,
-      required: true,
+      required: true
     },
     monitor: {
       type: Number,
       required: false,
-      default: -1,
-    },
-  },
+      default: -1
+    }
+  }
 };
 </script>

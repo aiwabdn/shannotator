@@ -58,8 +58,8 @@ export default {
   props: {
     flag: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
@@ -67,20 +67,20 @@ export default {
       name: "",
       connectionName: "",
       connections: ["Local"],
-      path: "",
+      path: ""
     };
   },
 
   validations: {
     name: {
-      required,
+      required
     },
     connectionName: {
-      required,
+      required
     },
     path: {
-      required,
-    },
+      required
+    }
   },
 
   methods: {
@@ -90,28 +90,28 @@ export default {
         body: JSON.stringify({
           name: this.name,
           connection: this.connectionName,
-          path: this.path,
+          path: this.path
         }),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
+        headers: { "Content-type": "application/json; charset=UTF-8" }
       };
       fetch(`${SERVER_ADDR}/create_project`, requestOptions)
-        .then((response) => response.json())
-        .catch((e) => {
+        .then(response => response.json())
+        .catch(e => {
           console.log(e);
           return e;
         });
       this.showing = false;
-    },
+    }
   },
 
   mounted() {
     const requestOptions = {
-      method: "GET",
+      method: "GET"
     };
     fetch(`${SERVER_ADDR}/saved_connection_names`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => (this.connections = data.data))
-      .catch((e) => {
+      .then(response => response.json())
+      .then(data => (this.connections = data.data))
+      .catch(e => {
         console.log(e);
         return e;
       });
@@ -119,14 +119,14 @@ export default {
 
   computed: {
     showing: {
-      get: function () {
+      get: function() {
         return this.flag;
       },
-      set: function (value) {
+      set: function(value) {
         if (!value) {
           this.$emit("close");
         }
-      },
+      }
     },
     pathErrors() {
       const errors = [];
@@ -145,7 +145,7 @@ export default {
       //     errors.push("Name must be at most 10 characters long");
       //   !this.$v.name.required && errors.push("Name is required.");
       return errors;
-    },
-  },
+    }
+  }
 };
 </script>

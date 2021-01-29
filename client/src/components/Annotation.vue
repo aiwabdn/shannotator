@@ -11,18 +11,18 @@ export default {
   name: "Annotation",
 
   components: {
-    AttributeSet,
+    AttributeSet
   },
 
   props: {
     left: {
       type: [Number, String],
-      required: false,
+      required: false
     },
     top: {
       type: [Number, String],
-      required: false,
-    },
+      required: false
+    }
   },
 
   data() {
@@ -38,15 +38,15 @@ export default {
         // padding: "3px",
         // borderRadius: "5px",
         width: "20%",
-        maxWidth: "20%",
-      },
+        maxWidth: "20%"
+      }
     };
   },
 
   methods: {
     setCurrentSelectionAttribute(event) {
       this.$store.commit("setSelectionAttribute", event);
-    },
-  },
+    }
+  }
 };
 </script>

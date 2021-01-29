@@ -1,4 +1,4 @@
-import vuetify from '@/plugins/vuetify';
+import vuetify from "@/plugins/vuetify";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 import App from "./App.vue";
