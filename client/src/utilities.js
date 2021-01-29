@@ -439,8 +439,14 @@ class CanvasManager {
             CanvasManager.drawRegions();
           }
           break;
+        case "n":
+          if (store.state.currentSelectionIndex > -1 && !store.state.isEditing) {
+            store.state.currentSelectionIndex = (store.state.currentSelectionIndex + 1) % _.size(store.state.currentAnnotations.regions);
+          }
+          break;
         default:
-          console.log("pressed ", e.key);
+          // console.log("pressed ", e.key);
+          break;
       }
     }
   }
