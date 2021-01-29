@@ -30,17 +30,18 @@ class Project:
 
     def get_filenames(
         self, extensions: Optional[List[str]] = ["png", "jpg", "jpeg", "bmp"]
-    ):
+    ) -> List[str]:
         if len(self.project_files) == 0:
             return ConnectionManager.get_filenames(
                 self.connection_name, self.path, extensions
             )
         return self.project_files
 
-    def get_file(self, path: str):
-        filepath = ConnectionManager.get_file(self.connection_name, path)
-        anns = self.annotations.get(path, {})
-        return filepath, anns
+    def get_file(self, path: str) -> str:
+        return ConnectionManager.get_file(self.connection_name, path)
+
+    def get_annotations(self, path: str) -> Dict:
+        return self.annotations.get(path, {})
 
     def save_annotations(self, filename: str, annotations: Dict):
         self.annotations[filename] = annotations
@@ -99,8 +100,12 @@ class ProjectManager:
             cls.CURRENT_PROJECTS[name].load_annotations()
 
     @classmethod
-    def get_file(cls, project_name: str, filename: str) -> Tuple[str, Dict]:
+    def get_file(cls, project_name: str, filename: str) -> str:
         return cls.CURRENT_PROJECTS[project_name].get_file(filename)
+
+    @classmethod
+    def get_annotations(cls, project_name: str, filename: str) -> Dict:
+        return cls.CURRENT_PROJECTS[project_name].get_annotations(filename)
 
     @classmethod
     def get_filenames(cls, project_name: str) -> List[str]:

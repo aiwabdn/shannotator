@@ -207,23 +207,6 @@ export default new Vuex.Store({
       state.currentDefaults = _.mapValues(state.projectSettings.attributes, o =>
         getIndeterminateValueForType(o.type)
       );
-      // state.currentDefaults = _.mapValues(state.projectSettings.attributes, function f(o) {
-      //   let setter;
-      //   switch (o.type) {
-      //     case "radio":
-      //       setter = null;
-      //       break;
-      //     case "checkbox":
-      //       setter = [];
-      //       break;
-      //     case "text":
-      //       setter = "";
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      //   return setter;
-      // });
     },
 
     setDefaultAttribute(state, keyValue) {

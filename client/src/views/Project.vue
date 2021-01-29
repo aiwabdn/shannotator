@@ -132,7 +132,7 @@ export default {
     },
 
     setSelectedFile(fileIndex) {
-      console.log(fileIndex);
+      // console.log(fileIndex);
       this.$store.commit(
         "setCurrentFileIndex",
         this.$store.state.projectFiles[fileIndex]
@@ -156,7 +156,7 @@ export default {
         )
           .then(response => response.json())
           .then(data => {
-            this.$store.commit("setProjectSettings", data.settings);
+            this.$store.commit("setProjectSettings", data);
             sleep(100);
           });
         fetch(
@@ -165,7 +165,7 @@ export default {
         )
           .then(response => response.json())
           .then(data => {
-            this.$store.commit("setProjectFiles", data.data);
+            this.$store.commit("setProjectFiles", data);
           });
       })
       .catch(e => {

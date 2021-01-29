@@ -70,7 +70,7 @@ export default {
     fetch(`${SERVER_ADDR}/saved_project_names`, requestOptions)
       .then(response => response.json())
       .then(data => {
-        this.projects = data.data;
+        this.projects = data;
       });
   },
 

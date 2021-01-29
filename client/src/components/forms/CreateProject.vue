@@ -110,7 +110,7 @@ export default {
     };
     fetch(`${SERVER_ADDR}/saved_connection_names`, requestOptions)
       .then(response => response.json())
-      .then(data => (this.connections = data.data))
+      .then(data => (this.connections = data))
       .catch(e => {
         console.log(e);
         return e;
