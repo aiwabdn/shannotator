@@ -1,12 +1,14 @@
 # shannotator
-self hosted annotator
+Self hosted bounding-box annotator tool. Built on a client-server model, this tool can be used to connect to multiple data backends, e.g. Azure Blob, GCBucket, S3 and even local storage on the server side and annotate them through a browser interface. Additionally it provides options to create separate projects, download individual and project level annotations etc.
+
+Start by cloning the [repo](https://github.com/aiwabdn/shannotator).
 
 # Installation
 
 Make sure you have node version above `14.0.0`
 
 ```bash
-cd client
+cd shannotator/client
 npm install
 npm run serve
 ```
